@@ -1,37 +1,31 @@
 # Simple Product App
 
 > **Draft:** this README was started before the design was approved. Sections marked
-> *(pending)* are waiting on open decisions:
->
-> - the frontend framework
-> - the command that runs migrations
-> - how pre-commit is installed
-> - the ports
+> *(pending)* are waiting on the frontend decision.
 
 A small reference app for creating and listing products. A Flask JSON API is backed by
-PostgreSQL, and a simple web UI sits on top. It is built test-first and runs locally with one
-Docker Compose command. There is no deployment target.
+PostgreSQL, and a simple web UI sits on top. It is built test-first. Flask runs directly on your
+machine and PostgreSQL runs in Docker. There is no deployment target.
 
 **Tech stack**
 
 - **Backend:** Python 3.14 and Flask, with Poetry for dependency management
-- **Database:** PostgreSQL, with a single `products` table
+- **Database:** PostgreSQL 18 in Docker Compose, with a single `products` table
 - **Data access:** the SQLAlchemy ORM over the psycopg 3 driver, with Alembic for migrations
 - **Frontend:** *(pending: React with Vite, or something simpler)*
-- **Tests and checks:** pytest (written test-first), flake8, Black and isort, all run by
-  pre-commit hooks
-- **Local runtime:** Docker Compose
+- **Tests and checks:** pytest (written test-first), with Testcontainers for database tests;
+  flake8, Black and isort; all run by pre-commit hooks
 
 ## Prerequisites
 
-- Docker with Compose v2, such as Rancher Desktop or Docker Desktop.
-- Python 3.14 and Poetry 2.x, to run the backend and its tests outside Docker.
-- pre-commit *(pending: installed through Poetry or pipx)*.
+- Docker with Compose v2, such as Rancher Desktop or Docker Desktop. It runs PostgreSQL and the
+  throwaway databases the tests use.
+- Python 3.14 and Poetry 2.x.
 
 ## Database setup
 
-PostgreSQL runs as the `db` service in Docker Compose. Its data lives in a named Docker volume,
-so it survives restarts.
+PostgreSQL runs as the `db` service in Docker Compose, on `localhost:5432`. Its data lives in a
+named Docker volume, so it survives restarts.
 
 The schema is one table:
 
@@ -40,11 +34,27 @@ The schema is one table:
 | `products` | `id`   | UUID | Primary key |
 | `products` | `name` | text | Required    |
 
-Alembic migrations create and update the schema. *(pending: the command that runs them)*
+Start PostgreSQL, install the app, and create the table:
+
+```sh
+docker compose up -d
+poetry env use python3.14
+poetry install
+poetry run alembic upgrade head
+```
+
+`poetry env use` only needs to run once; it tells Poetry which Python to use. Alembic migrations
+create the schema and keep it up to date.
 
 ## Start backend
 
-*(pending: the Poetry and Flask commands, and the port)*
+```sh
+poetry run flask --app simple_product_app run --debug --port 8000
+```
+
+The API is at <http://localhost:8000/api/products>. `--debug` reloads the server when the code
+changes. The app uses port 8000 because on macOS, AirPlay Receiver already listens on Flask's
+default port, 5000.
 
 ## Start frontend
 
@@ -52,10 +62,19 @@ Alembic migrations create and update the schema. *(pending: the command that run
 
 ## Verify (open local host)
 
-*(pending: the ports)* Open the UI in a browser, create a product, and check that it appears
-in the list. To check the API directly, request `GET /api/products`.
+*(pending: the UI address)* Open the UI in a browser, create a product, and check that it
+appears in the list.
+
+To check the API directly:
+
+```sh
+curl http://localhost:8000/api/products
+```
 
 ## Notes
 
-- **One command:** `docker compose up --build` builds and starts the database, backend and
-  frontend together.
+- **Checks on every commit:** run `poetry run pre-commit install` once. Each commit then runs
+  isort, Black, flake8 and the full test suite with coverage.
+- **Tests:** `poetry run pytest --cov` runs everything. Tests marked `integration` start a
+  throwaway PostgreSQL container with Testcontainers, so Docker must be running.
+- **Stopping:** `docker compose down` stops PostgreSQL. Add `-v` to delete its data too.
