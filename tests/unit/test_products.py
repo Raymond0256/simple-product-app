@@ -14,11 +14,6 @@ def test_clean_name_returns_the_name_without_surrounding_whitespace(product_name
     assert clean_name(f"  {product_name}  ") == product_name
 
 
-@pytest.mark.xfail(
-    raises=(AssertionError, pytest.fail.Exception),
-    strict=True,
-    reason="RED: not implemented yet",
-)
 def test_clean_name_rejects_a_blank_name(blank_name):
     """
     GIVEN a name made only of whitespace
