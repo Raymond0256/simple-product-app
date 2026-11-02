@@ -1,8 +1,5 @@
 # Simple Product App
 
-> **In progress:** the app is being built test-first. Until it is, the migration and Flask
-> commands below, and the addresses they serve, don't work yet.
-
 A small reference app for creating and listing products. A Flask JSON API is backed by
 PostgreSQL, and a simple web UI sits on top. It is built test-first. Flask runs directly on your
 machine and PostgreSQL runs in Docker. There is no deployment target.

@@ -37,13 +37,14 @@ well, choose the one with fewer pieces.
 
 ```
 src/simple_product_app/
-  __init__.py        create_app(): config, SQLAlchemy engine, blueprints
+  __init__.py        create_app() and configured_database_url(): config, engine, blueprints
+  db.py              open_session(): a session on the app's engine, for request handlers
   models.py          Product model
   products.py        clean_name(), list_products(), create_product(), used by the API and the UI
   api.py             GET and POST /api/products (JSON)
   ui.py              GET and POST / (HTML form and list)
   templates/index.html
-migrations/          Alembic env.py and one revision
+migrations/          Alembic env.py (with the models' metadata) and one revision
 tests/
   conftest.py        shared fixtures
   test_readme.py     pins the README headings
