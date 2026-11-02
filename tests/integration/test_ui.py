@@ -44,9 +44,6 @@ def test_page_lists_the_products_oldest_first(db_client, product_names):
     assert NO_PRODUCTS not in page
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_submitting_a_name_saves_the_product_and_returns_to_the_page(
     db_client, product_name
 ):
