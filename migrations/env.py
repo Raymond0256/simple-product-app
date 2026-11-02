@@ -1,16 +1,12 @@
 """Alembic runs this file to apply migrations to the app's database."""
 
-import os
-
 from alembic import context
 from sqlalchemy import create_engine, pool
 
-from simple_product_app import DEFAULT_DATABASE_URL
+from simple_product_app import configured_database_url
 
 # Tests pass the URL of their throwaway database; otherwise use the app's.
-url = context.config.attributes.get("database_url") or os.environ.get(
-    "DATABASE_URL", DEFAULT_DATABASE_URL
-)
+url = context.config.attributes.get("database_url") or configured_database_url()
 engine = create_engine(url, poolclass=pool.NullPool)
 
 with engine.connect() as connection:
