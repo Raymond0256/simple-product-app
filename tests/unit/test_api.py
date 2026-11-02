@@ -42,3 +42,19 @@ def test_post_products_rejects_a_name_that_is_not_a_string(client, name):
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
     assert response.json == {"error": NAME_REQUIRED}
+
+
+@pytest.mark.xfail(
+    raises=AssertionError, strict=True, reason="RED: not implemented yet"
+)
+@pytest.mark.parametrize("body", ["[]", '"a string"', "null"])
+def test_post_products_rejects_a_body_that_is_not_a_json_object(client, body):
+    """
+    GIVEN a JSON body that is an array, a string or null
+    WHEN it is posted
+    THEN the API answers 422 with the reason
+    """
+    response = client.post("/api/products", data=body, content_type="application/json")
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
+    assert response.json == {"error": NAME_REQUIRED}
