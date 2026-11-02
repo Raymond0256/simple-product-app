@@ -25,3 +25,23 @@ def test_post_products_creates_a_product(db_client, db_engine, product_name):
     with db_engine.connect() as connection:
         stored = connection.execute(text("SELECT name FROM products")).scalars().all()
     assert stored == [product_name]
+
+
+@pytest.mark.xfail(
+    raises=AssertionError, strict=True, reason="RED: not implemented yet"
+)
+def test_get_products_lists_products_in_creation_order(db_client, product_names):
+    """
+    GIVEN products created one after another
+    WHEN the products are listed
+    THEN they come back oldest first, each with its id and name
+    """
+    created = [
+        db_client.post("/api/products", json={"name": name}).json
+        for name in product_names
+    ]
+
+    response = db_client.get("/api/products")
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == {"products": created}

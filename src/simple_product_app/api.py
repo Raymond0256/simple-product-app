@@ -10,6 +10,11 @@ from simple_product_app.products import clean_name, create_product
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
+@blueprint.get("/products")
+def get_products():
+    return jsonify(products=[])
+
+
 @blueprint.post("/products")
 def post_product():
     name = clean_name(request.get_json()["name"])

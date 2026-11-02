@@ -13,3 +13,9 @@ def product_name():
 def blank_name():
     """A name made only of whitespace."""
     return "   "
+
+
+@pytest.fixture
+def product_names():
+    """Names in reverse alphabetical order, so creation order and name order differ."""
+    return ["Desk lamp", "Bookshelf", "Armchair"]
