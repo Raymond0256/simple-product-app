@@ -1,0 +1,56 @@
+[project]
+name = "simple-product-app"
+version = "0.1.0"
+description = "A small reference app for creating and listing products with Flask and PostgreSQL"
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+# What the app needs to run.
+dependencies = [
+    "flask (>=3.1.3,<4.0.0)",
+    "sqlalchemy (>=2.1.6,<3.0.0)",
+    "alembic (>=1.20.1,<2.0.0)",
+    "psycopg[binary] (>=3.3.6,<4.0.0)",
+    "gunicorn (>=26.2.0,<27.0.0)",
+]
+
+[dependency-groups]
+# What developing and testing the app needs, kept apart from the runtime list above.
+dev = [
+    "pytest (>=9.2.0,<10.0.0)",
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "flake8 (>=7.5.0,<8.0.0)",
+    "flake8-pyproject (>=1.2.4,<2.0.0)",
+    "black (>=26.10.1,<27.0.0)",
+    "isort (>=9.0.2,<10.0.0)",
+    "pre-commit (>=4.7.0,<5.0.0)",
+]
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
+
+[tool.flake8]
+# Black's line length, and the two checks Black's docs say to turn off.
+# flake8 reads this table through the Flake8-pyproject plugin.
+max-line-length = 88
+extend-ignore = ["E203", "E701"]
+extend-exclude = [".venv", "node_modules"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers"]
+markers = [
+    "integration: needs Docker; runs against a real PostgreSQL container",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
