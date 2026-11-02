@@ -14,6 +14,13 @@ POSTGRES_IMAGE = "postgres:18-alpine"
 PYPROJECT = Path(__file__).parents[2] / "pyproject.toml"
 
 
+def alembic_config_for(database_url):
+    """Alembic's configuration from pyproject.toml, pointed at the given database."""
+    config = Config(toml_file=str(PYPROJECT))
+    config.attributes["database_url"] = database_url
+    return config
+
+
 @pytest.fixture(scope="session")
 def database_url():
     """A throwaway PostgreSQL database, migrated to the latest revision."""
@@ -21,9 +28,7 @@ def database_url():
         POSTGRES_IMAGE, username="test", password="test", dbname="test", driver=None
     ) as postgres:
         url = postgres.get_connection_url()
-        config = Config(toml_file=str(PYPROJECT))
-        config.attributes["database_url"] = url
-        command.upgrade(config, "head")
+        command.upgrade(alembic_config_for(url), "head")
         yield url
 
 
@@ -49,3 +54,9 @@ def db_app(database_url, db_engine):
 def db_client(db_app):
     """A test client for the app that uses the test database."""
     return db_app.test_client()
+
+
+@pytest.fixture
+def alembic_config(database_url):
+    """Alembic's configuration, pointed at the test database."""
+    return alembic_config_for(database_url)

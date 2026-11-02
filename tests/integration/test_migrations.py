@@ -1,6 +1,7 @@
 """Integration tests for the database migrations."""
 
 import pytest
+from alembic import command
 from sqlalchemy import inspect
 
 pytestmark = pytest.mark.integration
@@ -39,3 +40,12 @@ def test_migrations_create_the_products_table(db_engine):
     THEN it has exactly the designed columns and primary key
     """
     assert describe_table(db_engine, "products") == EXPECTED_PRODUCTS_TABLE
+
+
+def test_the_migrations_match_the_models(alembic_config):
+    """
+    GIVEN a database migrated to the latest revision
+    WHEN Alembic compares it with the ORM models
+    THEN it finds nothing that a new migration would need to change
+    """
+    command.check(alembic_config)
