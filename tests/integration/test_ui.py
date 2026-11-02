@@ -12,9 +12,6 @@ CREATE_BUTTON = "Create product"
 NO_PRODUCTS = "No products yet."
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_page_shows_the_form_and_says_when_there_are_no_products(db_client):
     """
     GIVEN no products
