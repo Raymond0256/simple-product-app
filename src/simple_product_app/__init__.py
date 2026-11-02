@@ -5,7 +5,7 @@ import os
 from flask import Flask
 from sqlalchemy import create_engine
 
-from simple_product_app import api
+from simple_product_app import api, ui
 
 DEFAULT_DATABASE_URL = (
     "postgresql://postgres:postgres@localhost:5432/simple_product_app"
@@ -19,4 +19,5 @@ def create_app(database_url=None):
     )
     app.extensions["db_engine"] = create_engine(app.config["DATABASE_URL"])
     app.register_blueprint(api.blueprint)
+    app.register_blueprint(ui.blueprint)
     return app
