@@ -1,5 +1,6 @@
 """Product rules, shared by the API and the UI."""
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from simple_product_app.models import Product
@@ -21,3 +22,8 @@ def create_product(session: Session, name: str) -> Product:
     session.add(product)
     session.commit()
     return product
+
+
+def list_products(session: Session) -> list[Product]:
+    """All products, oldest first: UUIDv7 ids sort in creation order."""
+    return list(session.scalars(select(Product).order_by(Product.id)))

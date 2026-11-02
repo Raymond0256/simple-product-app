@@ -27,9 +27,6 @@ def test_post_products_creates_a_product(db_client, db_engine, product_name):
     assert stored == [product_name]
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_get_products_lists_products_in_creation_order(db_client, product_names):
     """
     GIVEN products created one after another

@@ -5,14 +5,18 @@ from http import HTTPStatus
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.orm import Session
 
-from simple_product_app.products import clean_name, create_product
+from simple_product_app.products import clean_name, create_product, list_products
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
 @blueprint.get("/products")
 def get_products():
-    return jsonify(products=[])
+    with Session(current_app.extensions["db_engine"]) as session:
+        products = list_products(session)
+        return jsonify(
+            products=[{"id": product.id, "name": product.name} for product in products]
+        )
 
 
 @blueprint.post("/products")
