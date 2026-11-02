@@ -8,12 +8,14 @@ from simple_product_app.models import Product
 NAME_REQUIRED = "Name is required."
 
 
-def clean_name(value: str | None) -> str:
-    """Return the name without surrounding whitespace, or raise if it is blank."""
-    name = (value or "").strip()
-    if not name:
+def clean_name(value: object) -> str:
+    """Return the name without surrounding whitespace.
+
+    Raise ValueError if the value isn't a string, or is blank once trimmed.
+    """
+    if not isinstance(value, str) or not value.strip():
         raise ValueError(NAME_REQUIRED)
-    return name
+    return value.strip()
 
 
 def create_product(session: Session, name: str) -> Product:

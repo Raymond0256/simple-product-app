@@ -31,9 +31,6 @@ def test_post_products_rejects_a_missing_name(client):
     assert response.json == {"error": NAME_REQUIRED}
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 @pytest.mark.parametrize("name", [42, True, ["not", "a", "string"]])
 def test_post_products_rejects_a_name_that_is_not_a_string(client, name):
     """
