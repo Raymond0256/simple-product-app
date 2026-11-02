@@ -59,10 +59,3 @@ in the list. To check the API directly, request `GET /api/products`.
   frontend together.
 - **Local only:** there are no Kubernetes (NSK) manifests, Standard Pipeline workflows, or New
   Relic agent.
-- **Public package sources:** Python packages come from PyPI, JavaScript packages from the npm
-  registry, and container images from Docker Hub. Nothing is pulled from Artifactory. This
-  departs from the Python SIG's Artifactory rules (DEP-1, DEP-2) and its CIC base-image rule
-  (IMG-1) in the
-  [PySIG recommendations inventory](https://github.com/Nordstrom-Internal/APP08745-sig-python-decisions/blob/main/inventory/pysig-recommendations.md).
-- **Python 3.14:** published SIG guidance still recommends 3.11 or 3.13 (VER-1). Enabling 3.14
-  is an approved H2 2026 SIG priority (conflict X-8 in the same inventory).
