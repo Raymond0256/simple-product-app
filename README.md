@@ -18,8 +18,8 @@ machine and PostgreSQL runs in Docker. There is no deployment target.
 
 ## Prerequisites
 
-- Docker with Compose v2, such as Rancher Desktop or Docker Desktop. It runs PostgreSQL and the
-  throwaway databases the tests use.
+- Docker with Compose v2 or later (the `docker compose` command), such as Rancher Desktop or
+  Docker Desktop. It runs PostgreSQL and the throwaway databases the tests use.
 - Python 3.14 and Poetry 2.3 or later.
 
 ## Database setup
