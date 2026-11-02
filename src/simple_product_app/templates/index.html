@@ -9,7 +9,11 @@
       <h1>Products</h1>
       <form method="post">
         <label for="name">Name</label>
-        <input id="name" name="name" required>
+        <input id="name" name="name" value="{{ name }}" required
+          {%- if error %} aria-invalid="true" aria-describedby="name-error"{% endif %}>
+        {% if error %}
+          <p id="name-error">{{ error }}</p>
+        {% endif %}
         <button type="submit">Create product</button>
       </form>
       {% if products %}

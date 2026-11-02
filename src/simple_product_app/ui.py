@@ -1,5 +1,7 @@
 """The HTML page for listing and creating products."""
 
+from http import HTTPStatus
+
 from flask import Blueprint, current_app, redirect, render_template, request, url_for
 from sqlalchemy.orm import Session
 
@@ -16,7 +18,18 @@ def index():
 
 @blueprint.post("/")
 def create():
-    name = clean_name(request.form["name"])
+    typed = request.form["name"]
+    try:
+        name = clean_name(typed)
+    except ValueError as error:
+        with Session(current_app.extensions["db_engine"]) as session:
+            page = render_template(
+                "index.html",
+                products=list_products(session),
+                name=typed,
+                error=str(error),
+            )
+        return page, HTTPStatus.UNPROCESSABLE_CONTENT
     with Session(current_app.extensions["db_engine"]) as session:
         create_product(session, name)
     return redirect(url_for("ui.index"))

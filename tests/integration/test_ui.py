@@ -62,9 +62,6 @@ def test_submitting_a_name_saves_the_product_and_returns_to_the_page(
     assert re.findall(r"<li>(.*?)</li>", page) == [product_name]
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_submitting_a_blank_name_shows_the_page_again_with_the_reason(
     db_client, blank_name
 ):
