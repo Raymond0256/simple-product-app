@@ -6,18 +6,22 @@ from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import HTTPException
 
 from simple_product_app.db import open_session
+from simple_product_app.models import Product
 from simple_product_app.products import clean_name, create_product, list_products
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
+
+
+def product_json(product: Product) -> dict:
+    """The JSON shape of one product."""
+    return {"id": product.id, "name": product.name}
 
 
 @blueprint.get("/products")
 def get_products():
     with open_session() as session:
         products = list_products(session)
-        return jsonify(
-            products=[{"id": product.id, "name": product.name} for product in products]
-        )
+        return jsonify(products=[product_json(product) for product in products])
 
 
 @blueprint.post("/products")
@@ -30,7 +34,7 @@ def post_product():
         return jsonify(error=str(error)), HTTPStatus.UNPROCESSABLE_CONTENT
     with open_session() as session:
         product = create_product(session, name)
-        return jsonify(id=product.id, name=product.name), HTTPStatus.CREATED
+        return jsonify(product_json(product)), HTTPStatus.CREATED
 
 
 @blueprint.errorhandler(HTTPException)
