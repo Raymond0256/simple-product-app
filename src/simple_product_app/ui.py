@@ -10,10 +10,17 @@ from simple_product_app.products import clean_name, create_product, list_product
 blueprint = Blueprint("ui", __name__)
 
 
+def render_page(name: str = "", error: str | None = None) -> str:
+    """The page, with every product and the form's current state."""
+    with open_session() as session:
+        return render_template(
+            "index.html", products=list_products(session), name=name, error=error
+        )
+
+
 @blueprint.get("/")
 def index():
-    with open_session() as session:
-        return render_template("index.html", products=list_products(session))
+    return render_page()
 
 
 @blueprint.post("/")
@@ -22,13 +29,7 @@ def create():
     try:
         name = clean_name(typed)
     except ValueError as error:
-        with open_session() as session:
-            page = render_template(
-                "index.html",
-                products=list_products(session),
-                name=typed,
-                error=str(error),
-            )
+        page = render_page(name=typed, error=str(error))
         return page, HTTPStatus.UNPROCESSABLE_CONTENT
     with open_session() as session:
         create_product(session, name)
