@@ -55,3 +55,33 @@ def test_post_products_rejects_a_body_that_is_not_a_json_object(client, body):
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
     assert response.json == {"error": NAME_REQUIRED}
+
+
+@pytest.mark.xfail(
+    raises=AssertionError, strict=True, reason="RED: not implemented yet"
+)
+@pytest.mark.parametrize(
+    ("body", "content_type", "status"),
+    [
+        ('{"name": ', "application/json", HTTPStatus.BAD_REQUEST),
+        (
+            "name=x",
+            "application/x-www-form-urlencoded",
+            HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+        ),
+    ],
+    ids=["malformed-json", "not-json"],
+)
+def test_post_products_reports_unreadable_bodies_as_json_errors(
+    client, body, content_type, status
+):
+    """
+    GIVEN a body that is broken JSON, or not JSON at all
+    WHEN it is posted
+    THEN the API answers with Flask's status for it, as a JSON error
+    """
+    response = client.post("/api/products", data=body, content_type=content_type)
+
+    assert response.status_code == status
+    assert response.is_json
+    assert list(response.json) == ["error"]
