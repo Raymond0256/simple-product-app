@@ -4,6 +4,8 @@ import os
 
 from flask import Flask
 
+from simple_product_app import api
+
 DEFAULT_DATABASE_URL = (
     "postgresql://postgres:postgres@localhost:5432/simple_product_app"
 )
@@ -14,4 +16,5 @@ def create_app(database_url=None):
     app.config["DATABASE_URL"] = database_url or os.environ.get(
         "DATABASE_URL", DEFAULT_DATABASE_URL
     )
+    app.register_blueprint(api.blueprint)
     return app

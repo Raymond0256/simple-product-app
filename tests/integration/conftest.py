@@ -5,8 +5,10 @@ from pathlib import Path
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from testcontainers.community.postgres import PostgresContainer
+
+from simple_product_app import create_app
 
 POSTGRES_IMAGE = "postgres:18-alpine"
 PYPROJECT = Path(__file__).parents[2] / "pyproject.toml"
@@ -31,3 +33,17 @@ def db_engine(database_url):
     engine = create_engine(database_url)
     yield engine
     engine.dispose()
+
+
+@pytest.fixture
+def db_app(database_url, db_engine):
+    """The app, using the test database, starting with no products."""
+    with db_engine.begin() as connection:
+        connection.execute(text("DELETE FROM products"))
+    return create_app(database_url=database_url)
+
+
+@pytest.fixture
+def db_client(db_app):
+    """A test client for the app that uses the test database."""
+    return db_app.test_client()
