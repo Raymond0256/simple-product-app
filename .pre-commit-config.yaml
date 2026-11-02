@@ -1,16 +1,29 @@
 # Run `poetry run pre-commit install` once. These checks then run on every commit.
+# Every hook runs through Poetry, so each tool's version is pinned in poetry.lock
+# and pre-commit never installs anything itself.
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: check-yaml
-      - id: check-toml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-
-  # These use the tool versions pinned in poetry.lock.
   - repo: local
     hooks:
+      - id: check-yaml
+        name: check yaml
+        entry: poetry run check-yaml
+        language: system
+        types: [yaml]
+      - id: check-toml
+        name: check toml
+        entry: poetry run check-toml
+        language: system
+        types: [toml]
+      - id: end-of-file-fixer
+        name: fix end of files
+        entry: poetry run end-of-file-fixer
+        language: system
+        types: [text]
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+        entry: poetry run trailing-whitespace-fixer
+        language: system
+        types: [text]
       - id: isort
         name: isort
         entry: poetry run isort
