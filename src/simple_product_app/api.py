@@ -19,6 +19,7 @@ def product_json(product: Product) -> dict:
 
 @blueprint.get("/products")
 def get_products():
+    """List every product, oldest first."""
     with open_session() as session:
         products = list_products(session)
         return jsonify(products=[product_json(product) for product in products])
@@ -26,6 +27,7 @@ def get_products():
 
 @blueprint.post("/products")
 def post_product():
+    """Create a product from a JSON body like {"name": "Desk lamp"}."""
     payload = request.get_json()
     value = payload.get("name") if isinstance(payload, dict) else None
     try:

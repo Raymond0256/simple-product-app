@@ -17,7 +17,8 @@ def configured_database_url() -> str:
     return os.environ.get("DATABASE_URL", DEFAULT_DATABASE_URL)
 
 
-def create_app(database_url=None):
+def create_app(database_url: str | None = None) -> Flask:
+    """Build the app. Tests pass database_url; otherwise configured_database_url()."""
     app = Flask(__name__)
     app.config["DATABASE_URL"] = database_url or configured_database_url()
     app.extensions["db_engine"] = create_engine(app.config["DATABASE_URL"])

@@ -20,11 +20,13 @@ def render_page(name: str = "", error: str | None = None) -> str:
 
 @blueprint.get("/")
 def index():
+    """Show the form and the product list."""
     return render_page()
 
 
 @blueprint.post("/")
 def create():
+    """Create a product from the form, then send the browser back to the page."""
     typed = request.form["name"]
     try:
         name = clean_name(typed)
