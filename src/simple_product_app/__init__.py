@@ -11,5 +11,7 @@ DEFAULT_DATABASE_URL = (
 
 def create_app(database_url=None):
     app = Flask(__name__)
-    app.config["DATABASE_URL"] = database_url or os.environ.get("DATABASE_URL")
+    app.config["DATABASE_URL"] = database_url or os.environ.get(
+        "DATABASE_URL", DEFAULT_DATABASE_URL
+    )
     return app
