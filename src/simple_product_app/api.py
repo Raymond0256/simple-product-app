@@ -1,10 +1,18 @@
 """JSON API for listing and creating products."""
 
-from flask import Blueprint, jsonify
+from http import HTTPStatus
+
+from flask import Blueprint, current_app, jsonify, request
+from sqlalchemy.orm import Session
+
+from simple_product_app.products import clean_name, create_product
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
 @blueprint.post("/products")
 def post_product():
-    return jsonify({}), 501
+    name = clean_name(request.get_json()["name"])
+    with Session(current_app.extensions["db_engine"]) as session:
+        product = create_product(session, name)
+        return jsonify(id=product.id, name=product.name), HTTPStatus.CREATED

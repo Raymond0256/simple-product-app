@@ -40,7 +40,9 @@ def db_app(database_url, db_engine):
     """The app, using the test database, starting with no products."""
     with db_engine.begin() as connection:
         connection.execute(text("DELETE FROM products"))
-    return create_app(database_url=database_url)
+    app = create_app(database_url=database_url)
+    yield app
+    app.extensions["db_engine"].dispose()
 
 
 @pytest.fixture

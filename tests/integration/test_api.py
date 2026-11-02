@@ -11,9 +11,6 @@ pytestmark = pytest.mark.integration
 TIME_ORDERED_UUID_VERSION = 7
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_post_products_creates_a_product(db_client, db_engine, product_name):
     """
     GIVEN an empty products table

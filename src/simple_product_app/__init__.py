@@ -3,6 +3,7 @@
 import os
 
 from flask import Flask
+from sqlalchemy import create_engine
 
 from simple_product_app import api
 
@@ -16,5 +17,6 @@ def create_app(database_url=None):
     app.config["DATABASE_URL"] = database_url or os.environ.get(
         "DATABASE_URL", DEFAULT_DATABASE_URL
     )
+    app.extensions["db_engine"] = create_engine(app.config["DATABASE_URL"])
     app.register_blueprint(api.blueprint)
     return app
