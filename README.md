@@ -18,7 +18,8 @@ Docker Compose command. There is no deployment target.
 - **Database:** PostgreSQL, with a single `products` table
 - **Data access:** the SQLAlchemy ORM over the psycopg 3 driver, with Alembic for migrations
 - **Frontend:** *(pending: React with Vite, or something simpler)*
-- **Tests and checks:** pytest, written test-first, plus pre-commit hooks
+- **Tests and checks:** pytest (written test-first), flake8, Black and isort, all run by
+  pre-commit hooks
 - **Local runtime:** Docker Compose
 
 ## Prerequisites
