@@ -21,8 +21,10 @@ def get_products():
 
 @blueprint.post("/products")
 def post_product():
+    payload = request.get_json()
+    value = payload.get("name") if isinstance(payload, dict) else None
     try:
-        name = clean_name(request.get_json().get("name"))
+        name = clean_name(value)
     except ValueError as error:
         return jsonify(error=str(error)), HTTPStatus.UNPROCESSABLE_CONTENT
     with Session(current_app.extensions["db_engine"]) as session:
