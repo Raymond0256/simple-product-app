@@ -57,9 +57,6 @@ def test_post_products_rejects_a_body_that_is_not_a_json_object(client, body):
     assert response.json == {"error": NAME_REQUIRED}
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 @pytest.mark.parametrize(
     ("body", "content_type", "status"),
     [

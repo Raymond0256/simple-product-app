@@ -4,6 +4,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.orm import Session
+from werkzeug.exceptions import HTTPException
 
 from simple_product_app.products import clean_name, create_product, list_products
 
@@ -30,3 +31,9 @@ def post_product():
     with Session(current_app.extensions["db_engine"]) as session:
         product = create_product(session, name)
         return jsonify(id=product.id, name=product.name), HTTPStatus.CREATED
+
+
+@blueprint.errorhandler(HTTPException)
+def http_error(error: HTTPException):
+    """Send Flask's own errors, such as 400 and 415, as JSON instead of HTML."""
+    return jsonify(error=error.description), error.code
