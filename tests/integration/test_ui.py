@@ -5,6 +5,8 @@ from http import HTTPStatus
 
 import pytest
 
+from simple_product_app.products import NAME_REQUIRED
+
 pytestmark = pytest.mark.integration
 
 NAME_LABEL = '<label for="name">Name</label>'
@@ -58,3 +60,23 @@ def test_submitting_a_name_saves_the_product_and_returns_to_the_page(
     assert response.headers["Location"] == "/"
     page = db_client.get("/").get_data(as_text=True)
     assert re.findall(r"<li>(.*?)</li>", page) == [product_name]
+
+
+@pytest.mark.xfail(
+    raises=AssertionError, strict=True, reason="RED: not implemented yet"
+)
+def test_submitting_a_blank_name_shows_the_page_again_with_the_reason(
+    db_client, blank_name
+):
+    """
+    GIVEN the product form
+    WHEN a blank name is submitted
+    THEN the page comes back with 422, the reason tied to the field, and the typed value
+    """
+    response = db_client.post("/", data={"name": blank_name})
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
+    page = response.get_data(as_text=True)
+    assert f'<p id="name-error">{NAME_REQUIRED}</p>' in page
+    assert 'aria-invalid="true" aria-describedby="name-error"' in page
+    assert f'value="{blank_name}"' in page
