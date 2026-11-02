@@ -21,7 +21,10 @@ def get_products():
 
 @blueprint.post("/products")
 def post_product():
-    name = clean_name(request.get_json()["name"])
+    try:
+        name = clean_name(request.get_json()["name"])
+    except ValueError as error:
+        return jsonify(error=str(error)), HTTPStatus.UNPROCESSABLE_CONTENT
     with Session(current_app.extensions["db_engine"]) as session:
         product = create_product(session, name)
         return jsonify(id=product.id, name=product.name), HTTPStatus.CREATED
