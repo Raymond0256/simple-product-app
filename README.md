@@ -20,7 +20,7 @@ machine and PostgreSQL runs in Docker. There is no deployment target.
 
 - Docker with Compose v2, such as Rancher Desktop or Docker Desktop. It runs PostgreSQL and the
   throwaway databases the tests use.
-- Python 3.14 and Poetry 2.x.
+- Python 3.14 and Poetry 2.3 or later.
 
 ## Database setup
 

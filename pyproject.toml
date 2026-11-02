@@ -25,6 +25,10 @@ dev = [
     "pre-commit-hooks (>=6.0.0,<7.0.0)",
 ]
 
+[tool.poetry]
+# Older Poetry 2.x releases misread this project's dev dependency list.
+requires-poetry = ">=2.3"
+
 [tool.isort]
 profile = "black"
 src_paths = ["src", "tests"]
