@@ -2,9 +2,9 @@
 
 from http import HTTPStatus
 
-from flask import Blueprint, current_app, redirect, render_template, request, url_for
-from sqlalchemy.orm import Session
+from flask import Blueprint, redirect, render_template, request, url_for
 
+from simple_product_app.db import open_session
 from simple_product_app.products import clean_name, create_product, list_products
 
 blueprint = Blueprint("ui", __name__)
@@ -12,7 +12,7 @@ blueprint = Blueprint("ui", __name__)
 
 @blueprint.get("/")
 def index():
-    with Session(current_app.extensions["db_engine"]) as session:
+    with open_session() as session:
         return render_template("index.html", products=list_products(session))
 
 
@@ -22,7 +22,7 @@ def create():
     try:
         name = clean_name(typed)
     except ValueError as error:
-        with Session(current_app.extensions["db_engine"]) as session:
+        with open_session() as session:
             page = render_template(
                 "index.html",
                 products=list_products(session),
@@ -30,6 +30,6 @@ def create():
                 error=str(error),
             )
         return page, HTTPStatus.UNPROCESSABLE_CONTENT
-    with Session(current_app.extensions["db_engine"]) as session:
+    with open_session() as session:
         create_product(session, name)
     return redirect(url_for("ui.index"))
