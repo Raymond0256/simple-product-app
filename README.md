@@ -57,5 +57,3 @@ in the list. To check the API directly, request `GET /api/products`.
 
 - **One command:** `docker compose up --build` builds and starts the database, backend and
   frontend together.
-- **Local only:** there are no Kubernetes (NSK) manifests, Standard Pipeline workflows, or New
-  Relic agent.
