@@ -15,6 +15,11 @@ CREATE_BUTTON = "Create product"
 NO_PRODUCTS = "No products yet."
 
 
+def listed_names(page):
+    """The product names in the page's list, in order."""
+    return re.findall(r"<li>(.*?)</li>", page)
+
+
 def test_page_shows_the_form_and_says_when_there_are_no_products(db_client):
     """
     GIVEN no products
@@ -42,7 +47,7 @@ def test_page_lists_the_products_oldest_first(db_client, product_names):
 
     page = db_client.get("/").get_data(as_text=True)
 
-    assert re.findall(r"<li>(.*?)</li>", page) == product_names
+    assert listed_names(page) == product_names
     assert NO_PRODUCTS not in page
 
 
@@ -59,7 +64,7 @@ def test_submitting_a_name_saves_the_product_and_returns_to_the_page(
     assert response.status_code == HTTPStatus.FOUND
     assert response.headers["Location"] == "/"
     page = db_client.get("/").get_data(as_text=True)
-    assert re.findall(r"<li>(.*?)</li>", page) == [product_name]
+    assert listed_names(page) == [product_name]
 
 
 def test_submitting_a_blank_name_shows_the_page_again_with_the_reason(
