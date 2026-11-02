@@ -32,9 +32,6 @@ def describe_table(engine, table_name):
     return {"columns": columns, "primary_key": primary_key}
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_migrations_create_the_products_table(db_engine):
     """
     GIVEN a database migrated to the latest revision
