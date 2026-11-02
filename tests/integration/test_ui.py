@@ -29,9 +29,6 @@ def test_page_shows_the_form_and_says_when_there_are_no_products(db_client):
     assert NO_PRODUCTS in page
 
 
-@pytest.mark.xfail(
-    raises=AssertionError, strict=True, reason="RED: not implemented yet"
-)
 def test_page_lists_the_products_oldest_first(db_client, product_names):
     """
     GIVEN products created one after another

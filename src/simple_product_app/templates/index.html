@@ -12,7 +12,15 @@
         <input id="name" name="name" required>
         <button type="submit">Create product</button>
       </form>
-      <p>No products yet.</p>
+      {% if products %}
+        <ul>
+          {% for product in products %}
+            <li>{{ product.name }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No products yet.</p>
+      {% endif %}
     </main>
   </body>
 </html>
