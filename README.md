@@ -4,7 +4,7 @@
 > *(pending)* are waiting on open decisions:
 >
 > - the frontend framework
-> - the migration tool
+> - the command that runs migrations
 > - how pre-commit is installed
 > - the ports
 
@@ -16,6 +16,7 @@ Docker Compose command. There is no deployment target.
 
 - **Backend:** Python 3.14 and Flask, with Poetry for dependency management
 - **Database:** PostgreSQL, with a single `products` table
+- **Data access:** the SQLAlchemy ORM over the psycopg 3 driver, with Alembic for migrations
 - **Frontend:** *(pending: React with Vite, or something simpler)*
 - **Tests and checks:** pytest, written test-first, plus pre-commit hooks
 - **Local runtime:** Docker Compose
@@ -38,7 +39,7 @@ The schema is one table:
 | `products` | `id`   | UUID | Primary key |
 | `products` | `name` | text | Required    |
 
-*(pending: the migration tool and the command that creates the table)*
+Alembic migrations create and update the schema. *(pending: the command that runs them)*
 
 ## Start backend
 
