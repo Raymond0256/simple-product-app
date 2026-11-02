@@ -7,7 +7,6 @@
 > - the migration tool
 > - how pre-commit is installed
 > - the ports
-> - where Docker builds read the corporate certificate
 
 A small reference app for creating and listing products. A Flask JSON API is backed by
 PostgreSQL, and a simple web UI sits on top. It is built test-first and runs locally with one
@@ -26,8 +25,6 @@ Docker Compose command. There is no deployment target.
 - Docker with Compose v2, such as Rancher Desktop or Docker Desktop.
 - Python 3.14 and Poetry 2.x, to run the backend and its tests outside Docker.
 - pre-commit *(pending: installed through Poetry or pipx)*.
-- On the Nordstrom network, a one-time export of the corporate root certificate. Without it,
-  Docker builds can't download packages. See **Corporate TLS** under [Notes](#notes).
 
 ## Database setup
 
@@ -69,14 +66,3 @@ in the list. To check the API directly, request `GET /api/products`.
   [PySIG recommendations inventory](https://github.com/Nordstrom-Internal/APP08745-sig-python-decisions/blob/main/inventory/pysig-recommendations.md).
 - **Python 3.14:** published SIG guidance still recommends 3.11 or 3.13 (VER-1). Enabling 3.14
   is an approved H2 2026 SIG priority (conflict X-8 in the same inventory).
-- **Corporate TLS (Zscaler):** on the Nordstrom network, Zscaler re-signs traffic to pypi.org,
-  files.pythonhosted.org and registry.npmjs.org. Your Mac trusts the signing root through the
-  keychain, but containers don't. As a result, `pip` and `npm` fail inside Docker builds with
-  "unable to get local issuer certificate". Export the root once:
-
-  ```sh
-  security find-certificate -a -c "Nordstrom Root PKI" -p \
-    /Library/Keychains/System.keychain > certs/nordstrom-root-pki.crt
-  ```
-
-  *(pending: the exact path the Docker builds read)* Off the corporate network, skip this step.
