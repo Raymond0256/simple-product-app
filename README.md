@@ -1,7 +1,7 @@
 # Simple Product App
 
-> **Draft:** this README was started before the design was approved. Sections marked
-> *(pending)* are waiting on the frontend decision.
+> **In progress:** the app is being built test-first. Until it is, the migration and Flask
+> commands below, and the addresses they serve, don't work yet.
 
 A small reference app for creating and listing products. A Flask JSON API is backed by
 PostgreSQL, and a simple web UI sits on top. It is built test-first. Flask runs directly on your
@@ -12,7 +12,7 @@ machine and PostgreSQL runs in Docker. There is no deployment target.
 - **Backend:** Python 3.14 and Flask, with Poetry for dependency management
 - **Database:** PostgreSQL 18 in Docker Compose, with a single `products` table
 - **Data access:** the SQLAlchemy ORM over the psycopg 3 driver, with Alembic for migrations
-- **Frontend:** *(pending: React with Vite, or something simpler)*
+- **Frontend:** HTML pages rendered by Flask with Jinja templates; no JavaScript build
 - **Tests and checks:** pytest (written test-first), with Testcontainers for database tests;
   flake8, Black and isort; all run by pre-commit hooks
 
@@ -58,12 +58,12 @@ default port, 5000.
 
 ## Start frontend
 
-*(pending: the frontend decision)*
+Nothing separate to start: the backend serves the UI at <http://localhost:8000/>.
 
 ## Verify (open local host)
 
-*(pending: the UI address)* Open the UI in a browser, create a product, and check that it
-appears in the list.
+Open <http://localhost:8000/>, enter a product name, and select **Create product**. The new
+product appears in the list on the same page.
 
 To check the API directly:
 
