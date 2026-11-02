@@ -82,3 +82,16 @@ def test_submitting_a_blank_name_shows_the_page_again_with_the_reason(
     assert f'<p id="name-error">{NAME_REQUIRED}</p>' in page
     assert 'aria-invalid="true" aria-describedby="name-error"' in page
     assert f'value="{blank_name}"' in page
+
+
+def test_page_escapes_product_names(db_client):
+    """
+    GIVEN a product whose name contains HTML
+    WHEN the page is opened
+    THEN the name is shown as text, not run as markup
+    """
+    db_client.post("/api/products", json={"name": "<b>bold</b>"})
+
+    page = db_client.get("/").get_data(as_text=True)
+
+    assert listed_names(page) == ["&lt;b&gt;bold&lt;/b&gt;"]

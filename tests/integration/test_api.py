@@ -73,3 +73,17 @@ def test_post_products_ignores_unknown_fields(db_client, db_engine, product_name
     assert response.status_code == HTTPStatus.CREATED
     assert set(response.json) == {"id", "name"}
     assert stored_names(db_engine) == [product_name]
+
+
+def test_post_products_allows_duplicate_names(db_client, db_engine, product_name):
+    """
+    GIVEN a product that already exists
+    WHEN another product with the same name is posted
+    THEN both are stored, each with its own id
+    """
+    first = db_client.post("/api/products", json={"name": product_name})
+    second = db_client.post("/api/products", json={"name": product_name})
+
+    assert second.status_code == HTTPStatus.CREATED
+    assert first.json["id"] != second.json["id"]
+    assert stored_names(db_engine) == [product_name, product_name]
